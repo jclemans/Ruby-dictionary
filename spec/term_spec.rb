@@ -1,5 +1,7 @@
 require 'rspec'
 require 'term'
+require 'word'
+require 'definition'
 
 describe 'Term' do
   before do
@@ -68,9 +70,20 @@ describe 'Term' do
 
   describe 'show_definitions' do
     it 'for an inputted word, it shows all definitions with index numbers' do
-      new_term = Term.create('bobcat', 'a cat named Bob')
-      new_term.add_definition('a piece of machinery')
-      new_term.show_definitions.should eq "1. a cat named Bob\n2. a piece of machinery\n"
+      new_word = Word.new('bobcat', 'English')
+      new_definition = Definition.new('a cat named Bob', 'English')
+      new_term = Term.create(new_word, new_definition)
+      new_term.show_definitions.should eq "\t1. a cat named Bob\n"
+    end
+  end
+
+  describe '.list_words' do
+    it 'lists the words associated with all terms' do
+      new_word = Word.new('carrot', 'English')
+      new_definition = Definition.new('A delicious vegetable', 'English')
+      new_term = Term.create(new_word, new_definition)
+      new_term.word.word.should eq 'carrot'
+      new_term.definitions[0].definition.should eq 'A delicious vegetable'
     end
   end
 end

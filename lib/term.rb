@@ -1,3 +1,6 @@
+# require 'word'
+# require 'definition'
+
 class Term
   attr_reader :word, :definitions
   @@all_terms = []
@@ -36,7 +39,7 @@ class Term
 
   def Term.list_words
     @@all_terms.each_with_index do |term, index|
-      puts "#{index + 1} #{term.word}"
+      puts "#{index + 1} #{term.word.word}"
     end
   end
 
@@ -45,8 +48,9 @@ class Term
   end
 
   def Term.search(input_word)
+    #select
     @@all_terms.each do |term|
-      if term.word.downcase == input_word.downcase
+      if term.word.word.downcase == input_word.downcase
         return term
       end
     end
@@ -55,11 +59,9 @@ class Term
   def show_definitions
     definitions_string = ""
     @definitions.each_with_index do |a_definition, index|
-      definitions_string += "\t#{index + 1}. #{a_definition}\n"
+      definitions_string += "\t#{index + 1}. #{a_definition.definition}\n"
     end
     definitions_string
   end
 end
 
-new_term = Term.create('bobcat', 'a cat named Bob')
-new_term.add_definition('a piece of machinery')

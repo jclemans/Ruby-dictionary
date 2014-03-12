@@ -1,4 +1,6 @@
 require './lib/term'
+require './lib/word'
+require './lib/definition'
 
 def dictionary_menu
   puts "\n-Main Menu-\n"
@@ -39,7 +41,7 @@ end
 
 def term_edit_menu(current_term)
   puts "\n-Term Edit Menu-\n"
-  puts "#{current_term.word}: \n#{current_term.show_definitions}\n\n"
+  puts "#{current_term.word.word}: \n#{current_term.show_definitions}\n\n"
   puts "Press 'e' to edit the definition."
   puts "Press 'a' to add an additional definition."
   puts "Press 'd' to delete the term."
@@ -48,22 +50,28 @@ def term_edit_menu(current_term)
 
   case term_edit_menu_choice
   when 'e'
-    puts "Please enter the number for the definition to edit for #{current_term.word}: "
+    puts "Please enter the number for the definition to edit for #{current_term.word.word}: "
     definition_index = gets.chomp.to_i
-    puts "Please enter an edited definition for #{current_term.word}: "
+    puts "Please enter an edited definition for #{current_term.word.word}: "
     new_definition = gets.chomp
-    current_term.edit_definition(new_definition, definition_index-1)
-    puts "New definition for #{current_term.word}: #{current_term.definitions[definition_index-1]}"
+    puts "Enter the language of the edited definition: "
+    new_language = gets.chomp
+    new_def = Definition.new(new_definition, new_language)
+    current_term.edit_definition(new_def, definition_index-1)
+    puts "New definition for #{current_term.word.word}: #{new_definition}"
     term_edit_menu(current_term)
   when 'a'
-    puts "Please enter an additional definition for #{current_term.word}: "
-    additional_definition = gets.chomp
+    puts "Please enter an additional definition for #{current_term.word.word}: "
+    get_add_definition = gets.chomp
+    puts "Please enter the language of this definition: "
+    get_language = gets.chomp
+    additional_definition = Definition.new(get_add_definition, get_language)
     current_term.add_definition(additional_definition)
-    puts "#{additional_definition} has been added to #{current_term.word}."
+    puts "#{get_add_definition} (#{get_language}) has been added to #{current_term.word.word}."
     term_edit_menu(current_term)
   when 'd'
     current_term.delete
-    puts "#{current_term.word} has been deleted."
+    puts "#{current_term.word.word} has been deleted."
     list_all_words
   when 'm'
     dictionary_menu
@@ -76,11 +84,15 @@ end
 def add_term
   puts "\n-Add Term-\n"
   puts "Please enter a new word: "
-  new_word = gets.chomp
+  get_word = gets.chomp
+  puts "Please specify the language for this word: "
+  language = gets.chomp
   puts "Please enter a new definition: "
-  new_definition = gets.chomp
+  get_definition = gets.chomp
+  new_word = Word.new(get_word, language)
+  new_definition = Definition.new(get_definition, language)
   new_term = Term.create(new_word, new_definition)
-  puts "#{new_word} has been added. \n\n"
+  puts "#{get_word} (#{language}) has been added. \n\n"
   dictionary_menu
 end
 
